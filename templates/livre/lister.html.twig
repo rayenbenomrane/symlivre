@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	<h1>Liste des livres</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>titre</th>
+				<th>prix</th>
+				<th>editeur</th>
+				<th>date edition</th>
+				<th>categorie</th>
+				<th colspan="2">action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for livre in livres %}
+				<tr>
+
+
+					<td>{{livre.libelle}}</td>
+					<td>{{livre.prix}}</td>
+					<td>{{livre.editeur}}</td>
+					<td>{{livre.DateEdition|date('d/m/y')}}</td>
+					<td>{{livre.categorief.libelle}}</td>
+					<td>
+						<a href="{{ path('app_livre_detail', {'id': livre.id}) }}">voir details</a>
+						<a href="{{ path('app_livre_update', {'id': livre.id}) }}">edit</a>
+						<a href="{{ path('app_livre_delete', {'id': livre.id}) }}">Supprimer</a>
+					</td>
+				</tr>
+
+			</tr>
+			<tr>
+			{% endfor %}
+		</tbody>
+	</tbody>
+</table>
+<div class="navigation">
+	{{ knp_pagination_render(livres) }}
+</div>{% endblock %}
