@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Book;
+use App\Form\LivreType;
 use App\Repository\BookRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Knp\Component\Pager\PaginatorInterface;
@@ -12,9 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
-
-
+use Symfony\Component\Form\Extension\Validator\Constraints\Form;
 
 class LivreController extends AbstractController
 {
@@ -42,20 +41,21 @@ class LivreController extends AbstractController
         ]);
     }
     #[Route('/admin/livre/add', name: 'app_livre_add')]
-    public function ajouter(ManagerRegistry $doctrine): Response
+    public function ajouter(request $request, ManagerRegistry $doctrine): Response
     {
-        $date = new DateTime('2022-01-01');
+
         $livre = new Book();
-        $livre->setLibelle("reseau");
-        $livre->setResume("c est un reseau local");
-        $livre->setImage("https://via.placeholder.com/300");
-        $livre->setPrix(20);
-        $livre->setEditeur("jean");
-        $livre->setDateEdition($date);
-        $em = $doctrine->getManager();
-        $em->persist($livre);
-        $em->flush();
-        return $this->redirectToRoute('app_livre');
+        $form = $this->createForm(LivreType::class, $livre);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $livres = $form->getData();
+            $em = $doctrine->getManager();
+            $em->persist($livre);
+            $em->flush();
+            return $this->redirectToRoute('app_livre');
+        }
+        return $this->render('livre/add.html.twig', ['form' => $form]);
     }
     #[Route('/admin/livre/update/{id}', name: 'app_livre_update')]
     public function update_price($id, ManagerRegistry $doctrine): Response

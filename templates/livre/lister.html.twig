@@ -22,7 +22,7 @@
 					<td>{{livre.prix}}</td>
 					<td>{{livre.editeur}}</td>
 					<td>{{livre.DateEdition|date('d/m/y')}}</td>
-					<td>{{livre.categorief.libelle}}</td>
+					<td>{{livre.categorie.libelle}}</td>
 					<td>
 						<a href="{{ path('app_livre_detail', {'id': livre.id}) }}">voir details</a>
 						<a href="{{ path('app_livre_update', {'id': livre.id}) }}">edit</a>
